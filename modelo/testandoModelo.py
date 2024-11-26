@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import matplotlib.pyplot as plt  # Import necessário para exibição de imagens
-import os
+import json
 
 # Caminho do modelo salvo
 model_path = './modelo/modelo_fruits360_resnet50.h5'
@@ -10,11 +10,12 @@ model_path = './modelo/modelo_fruits360_resnet50.h5'
 # Carregar o modelo
 model = tf.keras.models.load_model(model_path)
 
-# Caminho para o diretório de treino do dataset
-train_dir = "C:\\Users\\joaoc\\.cache\\kagglehub\\datasets\\moltean\\fruits\\versions\\11\\fruits-360_dataset_100x100\\fruits-360\\Training"
+# Caminho para o arquivo JSON com as labels
+labels_path = './class_labels.json'
 
-# Obter os nomes das classes a partir das subpastas
-class_labels = {i: class_name for i, class_name in enumerate(sorted(os.listdir(train_dir)))}
+# Carregar as labels do JSON
+with open(labels_path, 'r') as json_file:
+    class_labels = json.load(json_file)
 
 
 
@@ -30,7 +31,7 @@ def preprocess_image(image_path, target_size=(100, 100)):
     return img, img_array
 
 # Caminho da imagem para teste
-image_path = './imagens/tomateAmarelo.jpg'  # Substitua pelo caminho da imagem
+image_path = './imagens/banana.png'  # Substitua pelo caminho da imagem
 
 # Pré-processar a imagem
 img, image = preprocess_image(image_path)
@@ -46,7 +47,7 @@ predictions = model.predict(image).flatten()
 # Obter as 3 maiores probabilidades e seus índices
 top_3_indices = np.argsort(predictions)[-3:][::-1]  # Ordena e pega os 3 maiores índices
 top_3_probs = predictions[top_3_indices]  # Probabilidades correspondentes
-top_3_classes = [class_labels[idx] for idx in top_3_indices]  # Classes correspondentes
+top_3_classes = [class_labels[str(idx)] for idx in top_3_indices]  # Classes correspondentes
 
 # Mostrar o resultado
 print(f"A classe prevista para a imagem é: {top_3_classes[0]} com probabilidade {top_3_probs[0]:.2f}")

@@ -7,7 +7,7 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import matplotlib.pyplot as plt  # Import necessário para exibição de imagens
-import os
+import json
 
 
 def preprocess_image(image_path, target_size=(100, 100)):
@@ -29,11 +29,12 @@ modelResNet = tf.keras.models.load_model(model_path)
 modelos = {"ResNet 50": modelResNet}
 
 
-# Caminho para o diretório de treino do dataset
-train_dir = "C:\\Users\\joaoc\\.cache\\kagglehub\\datasets\\moltean\\fruits\\versions\\11\\fruits-360_dataset_100x100\\fruits-360\\Training"
+# Caminho para o arquivo JSON com as labels
+labels_path = './class_labels.json'
 
-# Obter os nomes das classes a partir das subpastas
-class_labels = {i: class_name for i, class_name in enumerate(sorted(os.listdir(train_dir)))}
+# Carregar as labels do JSON
+with open(labels_path, 'r') as json_file:
+    class_labels = json.load(json_file)
 
 # Título e menu de navegação
 st.title("Classificação de frutas e legumes")
@@ -58,7 +59,7 @@ if selecao == "Visão Geral":
        # Obter as 3 maiores probabilidades e seus índices
         top_3_indices = np.argsort(predictions)[-3:][::-1]  # Ordena e pega os 3 maiores índices
         top_3_probs = predictions[top_3_indices]  # Probabilidades correspondentes
-        top_3_classes = [class_labels[idx] for idx in top_3_indices]  # Classes correspondentes
+        top_3_classes = [class_labels[str(idx)] for idx in top_3_indices]  # Classes correspondentes
 
         st.write("Resultados das previsões:")
 
