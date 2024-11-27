@@ -11,6 +11,8 @@ import json
 import zipfile
 import os
 import io
+
+
 # Função para criar o ZIP com imagens JPG
 def criar_zip_com_imagens(pasta):
     buffer = io.BytesIO()
