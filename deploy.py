@@ -105,7 +105,7 @@ elif selecao == "Informações sobre o dataset":
     st.write(list(class_labels.values()))
     st.write("Exemplo de imagens do dataset:")
     st.image("./imagens/pessego.jpg", caption='Exemplo de imagens da classe "Peach 1', use_column_width=True)
-    st.image("./imagens/maçã.jpg", caption='Exemplo de imagens da classe "Apple 1"', use_column_width=True)
+    st.image("./imagens/berinjela.jpg", caption='Exemplo de imagens da classe "Eggplant 1"', use_column_width=True)
 
 elif selecao == "Informações sobre o modelo":
     st.header("Informações sobre o modelo")
