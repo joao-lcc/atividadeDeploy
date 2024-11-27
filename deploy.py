@@ -8,7 +8,23 @@ import numpy as np
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import matplotlib.pyplot as plt  # Import necessário para exibição de imagens
 import json
+import zipfile
+import os
+import io
+# Função para criar o ZIP com imagens JPG
+def criar_zip_com_imagens(pasta):
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+        for raiz, _, arquivos in os.walk(pasta):
+            for arquivo in arquivos:
+                if arquivo.endswith(".jpg"):  # Filtrar apenas arquivos JPG
+                    caminho_completo = os.path.join(raiz, arquivo)
+                    zip_file.write(caminho_completo, os.path.relpath(caminho_completo, pasta))
+    buffer.seek(0)
+    return buffer
 
+pastaImagens = "./imagens/"
+arquivo_zip = criar_zip_com_imagens(pastaImagens)
 
 def preprocess_image(image_path, target_size=(100, 100)):
     """
@@ -50,7 +66,12 @@ elif selecao == "Importar imagem":
     st.header("Importando imagem")
     st.write("Nesta página, você pode importar uma imagem de uma fruta ou legume e o modelo irá prever a classe da imagem. Faça o upload de uma imagem no formato JPG para ver o resultado.")
     st.write("Se precisar, utilize o arquivo .ZIP abaixo com imagens de exemplo para testar.")
-    st.download_button("Baixar imagens de exemplo", "./imagens/imagensTeste.zip", label="Clique aqui para baixar o arquivo .ZIP com imagens de exemplo")
+    st.download_button(
+    label="Baixar ZIP com imagens",
+    data=arquivo_zip,
+    file_name="imagens.zip",
+    mime="application/zip"
+    )
     uploaded_file = st.file_uploader("Arquivos JPEG ou PNG", type=["jpg", "png"])
     if uploaded_file is not None:
         st.write("Imagem importada com sucesso!")
