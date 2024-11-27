@@ -26,8 +26,6 @@ model_path = './modelo/modelo_fruits360_resnet50.h5'
 
 # Carregar o modelo
 modelResNet = tf.keras.models.load_model(model_path)
-modelos = {"ResNet 50": modelResNet}
-
 
 # Caminho para o arquivo JSON com as labels
 labels_path = './class_labels.json'
@@ -39,20 +37,23 @@ with open(labels_path, 'r') as json_file:
 # Título e menu de navegação
 st.title("Classificação de frutas e legumes")
 st.sidebar.title("Navegação")
-selecao = st.sidebar.radio("Escolha a seção", ["Visão Geral", "Importar imagem", "Estatísticas Descritivas"])
+selecao = st.sidebar.radio("Escolha a seção", ["Visão Geral", "Importar imagem", "Informações sobre o dataset", "Informações sobre o modelo"])
 
 # Seção de Visão Geral
 if selecao == "Visão Geral":
     st.header("Visão Geral")
-    st.write("Este dashboard permite que você importe uma imagem de uma fruta, fruto ou legume e obtenha a classificação da espécie.")
-    
-    # Importação da imagem
-    st.subheader("Importe sua imagem")
+    st.write("Olá! Este é um aplicativo para classificação de frutas e legumes. Você pode importar uma imagem de um fruta ou legume e o modelo irá prever a classe da imagem. Além disso, você pode visualizar informações sobre o dataset e o modelo utilizado. Selecione uma aba no menu lateral e descubra mais!.")
+    st.write("Este projeto serve como atividade avaliativa para a disciplina de inteligência artificial do curso de Ciências da Computação, UNESP Bauru.")
+
+# Seção de Importação das imagens
+elif selecao == "Importar imagem":
+    st.header("Importando imagem")
     uploaded_file = st.file_uploader("Faça upload de um arquivo JPG", type="jpg")
     if uploaded_file is not None:
         st.write("Imagem importada com sucesso!")
-        
-        # Fazer a previsão da imagem
+        # Exibir a imagem importada
+        st.image(uploaded_file, caption='Imagem importada', use_column_width=True)
+
         # Pré-processar a imagem
         img, image = preprocess_image(uploaded_file)
         predictions = modelResNet.predict(image).flatten()
@@ -65,17 +66,24 @@ if selecao == "Visão Geral":
 
         # Mostrar o resultado
         st.write(f"A classe prevista para a imagem é: {top_3_classes[0]} com probabilidade {top_3_probs[0]:.2f}")
-        st.write("Top 3 probabilidades:")
+        st.write("As 3 maiores probabilidades entre as classes do dataset foram:")
         for i in range(3):
             st.write(f"Classe: {top_3_classes[i]} | Probabilidade: {top_3_probs[i]:.2f}")
+    else:
+        st.write("Erro na importação da imagem, tente novamente.")
+    
+    
+elif selecao == "Informações sobre o dataset":
+    st.header("Informações do dataset")
+    st.write("Número de imagens: 94110")
+    st.write("Número de classes: 141")
+    st.write("Classes do dataset:")
+    st.write(list(class_labels.values()))
+    st.write("Exemplo de imagens do dataset:")
+    st.image("./imagens/pessego.jpg", caption='Exemplo de imagens da classe "Peach 1', use_column_width=True)
+    st.image("./imagens/maçã.jpg", caption='Exemplo de imagens da classe "Apple 1"', use_column_width=True)
 
-# Seção de Classificação de Espécies
-elif selecao == "Importar imagem":
-    st.header("Importando imagem")
-    st.write("oi")
-    
-    
-elif selecao == "Estatísticas Descritivas":
-    st.header("Estatísticas Descritivas")
-    st.write("oi 2")
+elif selecao == "Informações sobre o modelo":
+    st.header("Informações sobre o modelo")
+    st.write("O modelo ResNet-50 é uma rede neural convolucional profunda com 50 camadas, desenvolvida pela Microsoft. A arquitetura ResNet, abreviação de Residual Network, foi introduzida em 2015 e revolucionou o campo de visão computacional ao vencer a competição ImageNet. A principal inovação da ResNet é o uso de conexões residuais, que permitem que os gradientes fluam diretamente através da rede, facilitando o treinamento de redes muito profundas. Essas conexões residuais ajudam a mitigar o problema do desaparecimento do gradiente, comum em redes profundas. O ResNet-50 é amplamente utilizado em tarefas de classificação de imagens devido à sua capacidade de extrair características ricas e discriminativas das imagens. Ele é treinado em um grande conjunto de dados e pode ser adaptado para diferentes tarefas de visão computacional, como detecção de objetos e segmentação de imagens. A arquitetura ResNet-50 é composta por blocos residuais, cada um contendo várias camadas convolucionais, seguidas por normalização em lote e funções de ativação ReLU. No final, há uma camada totalmente conectada que produz as previsões finais. A ResNet-50 é conhecida por seu equilíbrio entre profundidade e eficiência computacional, tornando-a uma escolha popular para muitos aplicativos de visão computacional.")
 
