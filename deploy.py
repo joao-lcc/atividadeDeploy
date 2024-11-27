@@ -35,7 +35,7 @@ with open(labels_path, 'r') as json_file:
     class_labels = json.load(json_file)
 
 # Título e menu de navegação
-st.title("Classificação de frutas e legumes")
+st.title("Classificação de frutas e legumes utilizando ResNet-50")
 st.sidebar.title("Navegação")
 selecao = st.sidebar.radio("Escolha a seção", ["Visão Geral", "Importar imagem", "Informações sobre o dataset", "Informações sobre o modelo"])
 
@@ -48,7 +48,10 @@ if selecao == "Visão Geral":
 # Seção de Importação das imagens
 elif selecao == "Importar imagem":
     st.header("Importando imagem")
-    uploaded_file = st.file_uploader("Faça upload de um arquivo JPG", type="jpg")
+    st.write("Nesta página, você pode importar uma imagem de uma fruta ou legume e o modelo irá prever a classe da imagem. Faça o upload de uma imagem no formato JPG para ver o resultado.")
+    st.write("Se precisar, utilize o arquivo .ZIP abaixo com imagens de exemplo para testar.")
+    st.download_button("Baixar imagens de exemplo", "./imagens/imagensTeste.zip", label="Clique aqui para baixar o arquivo .ZIP com imagens de exemplo")
+    uploaded_file = st.file_uploader("Arquivos JPEG ou PNG", type=["jpg", "png"])
     if uploaded_file is not None:
         st.write("Imagem importada com sucesso!")
         # Exibir a imagem importada
@@ -69,8 +72,6 @@ elif selecao == "Importar imagem":
         st.write("As 3 maiores probabilidades entre as classes do dataset foram:")
         for i in range(3):
             st.write(f"Classe: {top_3_classes[i]} | Probabilidade: {top_3_probs[i]:.2f}")
-    else:
-        st.write("Erro na importação da imagem, tente novamente.")
     
     
 elif selecao == "Informações sobre o dataset":

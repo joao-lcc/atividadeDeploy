@@ -31,7 +31,7 @@ def preprocess_image(image_path, target_size=(100, 100)):
     return img, img_array
 
 # Caminho da imagem para teste
-image_path = './imagens/banana.png'  # Substitua pelo caminho da imagem
+image_path = './imagens/repolho.jpg'  # Substitua pelo caminho da imagem
 
 # Pré-processar a imagem
 img, image = preprocess_image(image_path)
